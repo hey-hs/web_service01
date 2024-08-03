@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>User Registration</title>
+    <link rel="stylesheet" href="index.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        input:invalid {
+            border-color: red;
+        }
+        input:invalid:focus {
+            outline: none;
+            border-color: red;
+            box-shadow: 0 0 5px red;
+        }
+    </style>
+</head>
+<body>
+    <form id="userForm">
+        <h2>Add User</h2>
+        <input type="text" name="firstName" placeholder="First Name" required pattern="[A-Za-z]+" title="Please enter letters only" />
+        <input type="text" name="lastName" placeholder="Last Name" required pattern="[A-Za-z]+" title="Please enter letters only" />
+        <input type="text" name="mobileNo" placeholder="Mobile No" required pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number" />
+        <input type="email" name="emailId" placeholder="Email" required title="Please enter a valid email address" />
+        <input type="text" name="street" placeholder="Street" required />
+        <input type="text" name="city" placeholder="City" required />
+        <input type="text" name="state" placeholder="State" required />
+        <input type="text" name="country" placeholder="Country" required />
+        <input type="text" name="loginId" placeholder="Login ID" required pattern="[a-zA-Z0-9]{8,}" title="Login ID must be at least 8 characters long and contain only letters and numbers" />
+        <input type="password" name="password" placeholder="Password" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character" />
+        <button type="submit">Save</button>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            $("#userForm").on("submit", function (event) {
+                event.preventDefault();
+
+                if (this.checkValidity()) {
+                    const formData = {
+                        firstName: $('input[name="firstName"]').val(),
+                        lastName: $('input[name="lastName"]').val(),
+                        mobileNo: $('input[name="mobileNo"]').val(),
+                        emailId: $('input[name="emailId"]').val(),
+                        address: {
+                            street: $('input[name="street"]').val(),
+                            city: $('input[name="city"]').val(),
+                            state: $('input[name="state"]').val(),
+                            country: $('input[name="country"]').val(),
+                        },
+                        loginId: $('input[name="loginId"]').val(),
+                        password: $('input[name="password"]').val(),
+                    };
+
+                    console.log(formData);
+                    jQuery.support.cors = true;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:3000/api/users",
+                        data: JSON.stringify(formData),
+                        contentType: "application/json",
+                        success: function (response) {
+                            alert("User saved successfully");
+                            window.location.href = "display.html";
+                        },
+                        error: function (error) {
+                            alert("Error saving user");
+                            console.log(error.responseJSON);
+                        },
+                    });
+                } else {
+                    alert("Please fill out the form correctly.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
