@@ -10,6 +10,11 @@ const app = express();
 
 // Connect to the database
 connectDB();
+app.use(
+  cors({
+    origin: "https://web-service01-1.onrender.com",
+  })
+);
 
 
 app.use(bodyParser.json());
